@@ -1,16 +1,15 @@
 package zxh.demo.tw.assignment.trains.domain.entity;
 
-import static java.util.Objects.*;
+import static zxh.demo.tw.assignment.trains.domain.util.NullChecker.*;
 
 import com.google.common.graph.ImmutableValueGraph;
 import com.google.common.graph.ValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
+import zxh.demo.tw.assignment.trains.domain.util.NullChecker;
 import zxh.demo.tw.assignment.trains.domain.vo.Distance;
 import zxh.demo.tw.assignment.trains.domain.vo.Station;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 public class Road {
     private final Station from;
@@ -57,7 +56,7 @@ public class Road {
         private ImmutableValueGraph.Builder<Station, Distance> roadGraphBuilder;
 
         private RoadBuilder(Station fromStation) {
-            from = to = requireNonNull(fromStation, "Station cannot be null.");
+            from = to = requireNonNull(fromStation);
             roadGraphBuilder = ValueGraphBuilder
                     .directed()
                     .<Station, Distance>immutable()
@@ -67,8 +66,8 @@ public class Road {
         public RoadBuilder addStop(Station stop, Distance distance) {
             roadGraphBuilder.putEdgeValue(
                     to,
-                    requireNonNull(stop, "Station cannot be null."),
-                    requireNonNull(distance, "Distance cannot be null."));
+                    requireNonNull(stop),
+                    requireNonNull(distance));
             to = stop;
             return this;
         }
