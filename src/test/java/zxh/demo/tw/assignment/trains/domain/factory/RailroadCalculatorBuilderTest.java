@@ -1,26 +1,20 @@
-package zxh.demo.tw.assignment.trains.domain.entity;
+package zxh.demo.tw.assignment.trains.domain.factory;
 
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import zxh.demo.tw.assignment.trains.domain.FakeValueGraphBuilder;
-import zxh.demo.tw.assignment.trains.domain.factory.RailroadCalculatorBuilder;
-import zxh.demo.tw.assignment.trains.domain.repository.ValueGraph;
+import zxh.demo.tw.assignment.trains.domain.entity.RailroadCalculator;
 import zxh.demo.tw.assignment.trains.domain.repository.ValueGraphBuilder;
 import zxh.demo.tw.assignment.trains.domain.vo.Distance;
 import zxh.demo.tw.assignment.trains.domain.vo.Station;
-import java.util.List;
-import java.util.stream.Collectors;
 
-class RailroadCalculatorTest {
+class RailroadCalculatorBuilderTest {
     private final ValueGraphBuilder<Station, Distance> mockBuilder = new FakeValueGraphBuilder<>();
 
     @Test
-    public void should_get_for_roads_from_a_to_c() {
-        // given
+    void should_build_calculator() {
         RailroadCalculator calculator = RailroadCalculatorBuilder.of(mockBuilder)
                 .addRailroad(Station.of("A"), Station.of("B"), Distance.of(5))
                 .addRailroad(Station.of("B"), Station.of("C"), Distance.of(4))
@@ -33,15 +27,21 @@ class RailroadCalculatorTest {
                 .addRailroad(Station.of("A"), Station.of("E"), Distance.of(7))
                 .build();
 
-        // when
-        List<Road> possibleRoads = calculator.getPossibleRoads(Station.of("A"), Station.of("C"));
+        assertNotNull(calculator);
+    }
 
-        // then
-        assertThat(possibleRoads.size(), is(4));
-        List<String> roads = possibleRoads.stream().map(Road::getAllStops).map(stepList -> stepList.stream().map(Station::getName).collect(Collectors.joining())).collect(Collectors.toList());
-        assertThat(roads, hasItem("ABC"));
-        assertThat(roads, hasItem("AEBC"));
-        assertThat(roads, hasItem("ADC"));
-        assertThat(roads, hasItem("ADEBC"));
+    @Test
+    void should_throw_Exception_if_null_station_or_distance() {
+        RailroadCalculatorBuilder builder1 = RailroadCalculatorBuilder.of(mockBuilder);
+        assertThrows(NullPointerException.class, () -> builder1.addRailroad(null, null, null), "Station cannot be null.");
+
+        RailroadCalculatorBuilder builder2 = RailroadCalculatorBuilder.of(mockBuilder);
+        Station a = Station.of("A");
+        assertThrows(NullPointerException.class, () -> builder2.addRailroad(a, null, null), "Station cannot be null.");
+
+        RailroadCalculatorBuilder builder3 = RailroadCalculatorBuilder.of(mockBuilder);
+        Station b = Station.of("B");
+        Station c = Station.of("C");
+        assertThrows(NullPointerException.class, () -> builder3.addRailroad(b, c, null), "Distance cannot be null.");
     }
 }
