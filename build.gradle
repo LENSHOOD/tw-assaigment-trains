@@ -1,9 +1,16 @@
+import org.gradle.api.JavaVersion
+
 plugins {
     id 'java'
 }
 
 group 'zxh.demo.tw.trains'
 version '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_14
+    targetCompatibility = JavaVersion.VERSION_14
+}
 
 repositories {
     mavenCentral()
