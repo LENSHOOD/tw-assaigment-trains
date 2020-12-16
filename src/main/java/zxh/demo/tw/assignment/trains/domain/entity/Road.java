@@ -5,7 +5,6 @@ import static zxh.demo.tw.assignment.trains.domain.util.NullChecker.requireNonNu
 import zxh.demo.tw.assignment.trains.domain.vo.Distance;
 import zxh.demo.tw.assignment.trains.domain.vo.Station;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
