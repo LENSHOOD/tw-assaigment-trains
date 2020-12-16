@@ -44,4 +44,30 @@ class RailroadCalculatorTest {
         assertThat(roads, hasItem("ADC"));
         assertThat(roads, hasItem("ADEBC"));
     }
+
+    @Test
+    public void should_get_for_roads_from_c_to_c_with_3_loops() {
+        // given
+        RailroadCalculator calculator = RailroadCalculatorBuilder.of(mockBuilder)
+                .addRailroad(Station.of("A"), Station.of("B"), Distance.of(5))
+                .addRailroad(Station.of("B"), Station.of("C"), Distance.of(4))
+                .addRailroad(Station.of("C"), Station.of("D"), Distance.of(8))
+                .addRailroad(Station.of("D"), Station.of("C"), Distance.of(8))
+                .addRailroad(Station.of("D"), Station.of("E"), Distance.of(6))
+                .addRailroad(Station.of("A"), Station.of("D"), Distance.of(5))
+                .addRailroad(Station.of("C"), Station.of("E"), Distance.of(2))
+                .addRailroad(Station.of("E"), Station.of("B"), Distance.of(3))
+                .addRailroad(Station.of("A"), Station.of("E"), Distance.of(7))
+                .build();
+
+        // when
+        List<Road> possibleRoads = calculator.getPossibleRoads(Station.of("C"), Station.of("C"));
+
+        // then
+        assertThat(possibleRoads.size(), is(3));
+        List<String> roads = possibleRoads.stream().map(Road::getAllStops).map(stepList -> stepList.stream().map(Station::getName).collect(Collectors.joining())).collect(Collectors.toList());
+        assertThat(roads, hasItem("CDC"));
+        assertThat(roads, hasItem("CEBC"));
+        assertThat(roads, hasItem("CDEBC"));
+    }
 }

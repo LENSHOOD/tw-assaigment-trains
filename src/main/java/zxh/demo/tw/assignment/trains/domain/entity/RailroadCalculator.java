@@ -22,13 +22,13 @@ public class RailroadCalculator {
 
     private void recursivelyFindRailroad(Station startStation, Station endStation, List<Station> preRailroad, List<List<Station>> finalRailroads) {
         for (Station next : railroadGraph.successors(startStation)) {
-            if (preRailroad.contains(next)) {
-                continue;
-            }
-
             ArrayList<Station> curRailroad = new ArrayList<>(preRailroad);
             curRailroad.add(next);
             if (!next.equals(endStation)) {
+                if (preRailroad.contains(next)) {
+                    continue;
+                }
+
                 recursivelyFindRailroad(next, endStation, curRailroad, finalRailroads);
             } else {
                 finalRailroads.add(curRailroad);
