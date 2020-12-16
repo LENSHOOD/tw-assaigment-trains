@@ -1,5 +1,7 @@
 package zxh.demo.tw.assignment.trains.domain.entity;
 
+import static java.util.Objects.*;
+
 import zxh.demo.tw.assignment.trains.domain.repository.ValueGraph;
 import zxh.demo.tw.assignment.trains.domain.vo.Distance;
 import zxh.demo.tw.assignment.trains.domain.vo.Station;
@@ -7,7 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class RailroadCalculator {
-    private ValueGraph<Station, Distance> railroadGraph;
+    private final ValueGraph<Station, Distance> railroadGraph;
 
     public RailroadCalculator(ValueGraph<Station, Distance> railroadGraph) {
         this.railroadGraph = railroadGraph;
@@ -37,7 +39,7 @@ public class RailroadCalculator {
     }
 
     private Optional<Road> toRoad(List<Station> railroad) {
-        if (Objects.isNull(railroad) || railroad.isEmpty()) {
+        if (isNull(railroad) || railroad.isEmpty()) {
             return Optional.empty();
         }
 
@@ -49,4 +51,24 @@ public class RailroadCalculator {
         return Optional.of(builder.build());
     }
 
+    public Optional<Road> tryBestMerge(Road left, Road right) {
+        Station leftTail = left.getTail();
+        LinkedList<Station> rightRoadOfStations = new LinkedList<>(right.getAllStops());
+        Station rightHead = rightRoadOfStations.poll();
+        while (nonNull(rightHead)) {
+            if (railroadGraph.successors(leftTail).contains(rightHead)) {
+                break;
+            }
+            rightHead = rightRoadOfStations.poll();
+        }
+
+        if (isNull(rightHead)) {
+            return Optional.empty();
+        }
+
+        ArrayList<Station> mergedStations = new ArrayList<>(left.getAllStops());
+        mergedStations.add(rightHead);
+        mergedStations.addAll(rightRoadOfStations);
+        return toRoad(mergedStations);
+    }
 }

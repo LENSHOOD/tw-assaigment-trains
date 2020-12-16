@@ -4,15 +4,13 @@ import static zxh.demo.tw.assignment.trains.domain.util.NullChecker.requireNonNu
 
 import zxh.demo.tw.assignment.trains.domain.vo.Distance;
 import zxh.demo.tw.assignment.trains.domain.vo.Station;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Road {
-    private final List<Map<Station, Distance>> stationStore;
+    private final List<Pair> stationStore;
 
-    private Road(List<Map<Station, Distance>> stationStore) {
+    private Road(List<Pair> stationStore) {
         this.stationStore = stationStore;
     }
 
@@ -21,27 +19,45 @@ public class Road {
     }
 
     public List<Station> getAllStops() {
-        return List.copyOf(stationStore.stream().flatMap(pair -> pair.keySet().stream()).collect(Collectors.toList()));
+        return List.copyOf(stationStore.stream().map(pair -> pair.station).collect(Collectors.toList()));
     }
 
     public Distance getWholeDistance() {
-        return Distance.of(stationStore.stream().flatMap(pair -> pair.values().stream()).mapToInt(Distance::getValue).sum());
+        return Distance.of(stationStore.stream().map(pair -> pair.distance).mapToInt(Distance::getValue).sum());
+    }
+
+    public Station getHead() {
+        return stationStore.get(0).station;
+    }
+
+    public Station getTail() {
+        return stationStore.get(stationStore.size() - 1).station;
     }
 
     public static class RoadBuilder {
-        private final List<Map<Station, Distance>> stationStore = new ArrayList<>();
+        private final List<Pair> stationStore = new ArrayList<>();
 
         private RoadBuilder(Station fromStation) {
-            stationStore.add(Map.of(requireNonNull(fromStation), Distance.of(0)));
+            stationStore.add(new Pair(requireNonNull(fromStation), Distance.of(0)));
         }
 
         public RoadBuilder addStop(Station stop, Distance distance) {
-            stationStore.add(Map.of(requireNonNull(stop), requireNonNull(distance)));
+            stationStore.add(new Pair(requireNonNull(stop), requireNonNull(distance)));
             return this;
         }
 
         public Road build() {
             return new Road(stationStore);
+        }
+    }
+
+    private static class Pair {
+        private final Station station;
+        private final Distance distance;
+
+        private Pair(Station station, Distance distance) {
+            this.station = station;
+            this.distance = distance;
         }
     }
 }
