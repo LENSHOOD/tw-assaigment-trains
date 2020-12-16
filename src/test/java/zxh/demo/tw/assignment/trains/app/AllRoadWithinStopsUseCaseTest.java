@@ -35,7 +35,6 @@ class AllRoadWithinStopsUseCaseTest {
     }
 
     @Test
-    @Disabled
     void should_get_road_of_cdc_cebc_within_3_stop() {
         // given
         AllRoadWithinStopsUseCase useCase = new AllRoadWithinStopsUseCase(railroadCalculator);
@@ -52,7 +51,6 @@ class AllRoadWithinStopsUseCaseTest {
     }
 
     @Test
-    @Disabled
     void should_get_road_of_abcdc_adcdc_adebc_within_4_stop() {
         // given
         AllRoadWithinStopsUseCase useCase = new AllRoadWithinStopsUseCase(railroadCalculator);
@@ -61,7 +59,7 @@ class AllRoadWithinStopsUseCaseTest {
         List<Road> roads = useCase.getAllRoadsWithinStopsFrom(Station.of("A"), Station.of("C"), 4);
 
         // then
-        assertThat(roads.size(), is(5));
+        assertThat(roads.size(), is(6));
         List<String> roadOfStrs = roads.stream()
                 .map(r -> r.getAllStops().stream().map(Station::getName).collect(Collectors.joining()))
                 .collect(Collectors.toList());
