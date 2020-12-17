@@ -8,11 +8,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class AllRoadWithinStopsUseCase {
+public class StopsUseCase {
     private final RailroadCalculator calculator;
 
-    public AllRoadWithinStopsUseCase(RailroadCalculator calculator) {
+    public StopsUseCase(RailroadCalculator calculator) {
         this.calculator = calculator;
+    }
+
+    List<Road> getAllRoadsExactlyStopsFrom(Station start, Station end, int stops) {
+        return getAllRoadsWithinStopsFrom(start, end, stops)
+                .stream()
+                .filter(r -> r.getAllStops().size() == stops + 1)
+                .collect(Collectors.toList());
     }
 
     List<Road> getAllRoadsWithinStopsFrom(Station start, Station end, int stops) {

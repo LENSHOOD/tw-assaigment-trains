@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import zxh.demo.tw.assignment.trains.adapter.outbound.GraphBuilder;
 import zxh.demo.tw.assignment.trains.domain.entity.RailroadCalculator;
@@ -16,7 +15,7 @@ import zxh.demo.tw.assignment.trains.domain.vo.Station;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class AllRoadWithinStopsUseCaseTest {
+class StopsUseCaseTest {
     private RailroadCalculator railroadCalculator;
 
     @BeforeEach
@@ -37,7 +36,7 @@ class AllRoadWithinStopsUseCaseTest {
     @Test
     void should_get_road_of_cdc_cebc_within_3_stop() {
         // given
-        AllRoadWithinStopsUseCase useCase = new AllRoadWithinStopsUseCase(railroadCalculator);
+        StopsUseCase useCase = new StopsUseCase(railroadCalculator);
 
         // when
         List<Road> roads = useCase.getAllRoadsWithinStopsFrom(Station.of("C"), Station.of("C"), 3);
@@ -53,7 +52,7 @@ class AllRoadWithinStopsUseCaseTest {
     @Test
     void should_get_road_of_abcdc_adcdc_adebc_within_4_stop() {
         // given
-        AllRoadWithinStopsUseCase useCase = new AllRoadWithinStopsUseCase(railroadCalculator);
+        StopsUseCase useCase = new StopsUseCase(railroadCalculator);
 
         // when
         List<Road> roads = useCase.getAllRoadsWithinStopsFrom(Station.of("A"), Station.of("C"), 4);
@@ -64,5 +63,37 @@ class AllRoadWithinStopsUseCaseTest {
                 .map(r -> r.getAllStops().stream().map(Station::getName).collect(Collectors.joining()))
                 .collect(Collectors.toList());
         assertThat(roadOfStrs, containsInAnyOrder("ABC", "ADC", "AEBC", "ABCDC", "ADCDC", "ADEBC"));
+    }
+
+    @Test
+    void should_get_road_of_cebc_that_exactly_3_stop() {
+        // given
+        StopsUseCase useCase = new StopsUseCase(railroadCalculator);
+
+        // when
+        List<Road> roads = useCase.getAllRoadsExactlyStopsFrom(Station.of("C"), Station.of("C"), 3);
+
+        // then
+        assertThat(roads.size(), is(1));
+        List<String> roadOfStrs = roads.stream()
+                .map(r -> r.getAllStops().stream().map(Station::getName).collect(Collectors.joining()))
+                .collect(Collectors.toList());
+        assertThat(roadOfStrs, containsInAnyOrder("CEBC"));
+    }
+
+    @Test
+    void should_get_road_of_ABCDC_ADCDC_ADEBC_that_exactly_4_stops() {
+        // given
+        StopsUseCase useCase = new StopsUseCase(railroadCalculator);
+
+        // when
+        List<Road> roads = useCase.getAllRoadsExactlyStopsFrom(Station.of("A"), Station.of("C"), 4);
+
+        // then
+        assertThat(roads.size(), is(3));
+        List<String> roadOfStrs = roads.stream()
+                .map(r -> r.getAllStops().stream().map(Station::getName).collect(Collectors.joining()))
+                .collect(Collectors.toList());
+        assertThat(roadOfStrs, containsInAnyOrder("ABCDC", "ADCDC", "ADEBC"));
     }
 }
