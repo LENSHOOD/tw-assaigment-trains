@@ -96,4 +96,20 @@ class StopsUseCaseTest {
                 .collect(Collectors.toList());
         assertThat(roadOfStrs, containsInAnyOrder("ABCDC", "ADCDC", "ADEBC"));
     }
+
+    @Test
+    void should_get_road_of_CEBCEBC_CDEBCDC_CDCDEBC_CDCDCDC_that_exactly_6_stops() {
+        // given
+        StopsUseCase useCase = new StopsUseCase(railroadCalculator);
+
+        // when
+        List<Road> roads = useCase.getAllRoadsExactlyStopsFrom(Station.of("C"), Station.of("C"), 6);
+
+        // then
+        assertThat(roads.size(), is(4));
+        List<String> roadOfStrs = roads.stream()
+                .map(r -> r.getAllStops().stream().map(Station::getName).collect(Collectors.joining()))
+                .collect(Collectors.toList());
+        assertThat(roadOfStrs, containsInAnyOrder("CEBCEBC", "CDEBCDC", "CDCDEBC", "CDCDCDC"));
+    }
 }
