@@ -1,6 +1,7 @@
 package zxh.demo.tw.assignment.trains.app;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,10 +13,11 @@ import zxh.demo.tw.assignment.trains.domain.entity.Road;
 import zxh.demo.tw.assignment.trains.domain.factory.RailroadCalculatorBuilder;
 import zxh.demo.tw.assignment.trains.domain.vo.Distance;
 import zxh.demo.tw.assignment.trains.domain.vo.Station;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-class ShortestRoadUseCaseTest {
+class RoadByDistanceUseCaseTest {
     private RailroadCalculator railroadCalculator;
 
     @BeforeEach
@@ -36,7 +38,7 @@ class ShortestRoadUseCaseTest {
     @Test
     void should_get_shortest_road_from_a_to_c() {
         // given
-        ShortestRoadUseCase useCase = new ShortestRoadUseCase(railroadCalculator);
+        RoadByDistanceUseCase useCase = new RoadByDistanceUseCase(railroadCalculator);
 
         // when
         Optional<Road> shortestRoadOp = useCase.getShortestRoadFrom(Station.of("A"), Station.of("C"));
@@ -53,7 +55,7 @@ class ShortestRoadUseCaseTest {
     @Test
     void should_get_shortest_road_from_b_to_b() {
         // given
-        ShortestRoadUseCase useCase = new ShortestRoadUseCase(railroadCalculator);
+        RoadByDistanceUseCase useCase = new RoadByDistanceUseCase(railroadCalculator);
 
         // when
         Optional<Road> shortestRoadOp = useCase.getShortestRoadFrom(Station.of("B"), Station.of("B"));
@@ -65,5 +67,21 @@ class ShortestRoadUseCaseTest {
                 is("BCEB"));
         assertThat(
                 shortestRoadOp.get().getWholeDistance().getValue(), is(9));
+    }
+
+    @Test
+    void should_get_roads_from_c_to_c_that_distance_less_than_30() {
+        // given
+        RoadByDistanceUseCase useCase = new RoadByDistanceUseCase(railroadCalculator);
+
+        // when
+        List<Road> roads = useCase.getRoadsDistanceLessThan(Station.of("C"), Station.of("C"), Distance.of(30));
+
+        // then
+        assertThat(roads.size(), is(7));
+        List<String> roadOfStrs = roads.stream()
+                .map(r -> r.getAllStops().stream().map(Station::getName).collect(Collectors.joining()))
+                .collect(Collectors.toList());
+        assertThat(roadOfStrs, containsInAnyOrder("CDC", "CEBC", "CEBCDC", "CDCEBC", "CDEBC", "CEBCEBC", "CEBCEBCEBC"));
     }
 }

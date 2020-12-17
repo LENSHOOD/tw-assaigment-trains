@@ -59,5 +59,31 @@ public class Road {
             this.station = station;
             this.distance = distance;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Pair pair = (Pair) o;
+            return Objects.equals(station, pair.station) && Objects.equals(distance, pair.distance);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(station, distance);
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Road road = (Road) o;
+        return Objects.equals(stationStore, road.stationStore);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(stationStore);
     }
 }
