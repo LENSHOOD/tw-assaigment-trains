@@ -16,13 +16,13 @@ public class RoadByDistanceUseCase {
         this.calculator = calculator;
     }
 
-    Optional<Road> getShortestRoadFrom(Station start, Station end) {
+    public Optional<Road> getShortestRoadFrom(Station start, Station end) {
         return calculator.getPossibleRoads(start, end)
                 .stream()
                 .min(Comparator.comparing(r -> r.getWholeDistance().getValue()));
     }
 
-    List<Road> getRoadsDistanceLessThan(Station start, Station stop, Distance maxDistance) {
+    public List<Road> getRoadsDistanceLessThan(Station start, Station stop, Distance maxDistance) {
         return RoadPermutationHelper.doPermutation(
                 calculator,
                 calculator.getPossibleRoads(start, stop),

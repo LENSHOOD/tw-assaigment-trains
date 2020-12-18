@@ -1,12 +1,12 @@
 package zxh.demo.tw.assignment.trains.app;
 
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import zxh.demo.tw.assignment.trains.adapter.outbound.GraphBuilder;
-import zxh.demo.tw.assignment.trains.app.exception.DistanceUseCaseException;
 import zxh.demo.tw.assignment.trains.domain.entity.RailroadCalculator;
 import zxh.demo.tw.assignment.trains.domain.factory.RailroadCalculatorBuilder;
 import zxh.demo.tw.assignment.trains.domain.vo.Distance;
@@ -55,7 +55,7 @@ class DistanceUseCaseTest {
         RailroadCalculator railroadCalculator = RailroadCalculatorBuilder.of(new GraphBuilder<>()).build();
         DistanceUseCase distanceUseCase = new DistanceUseCase(railroadCalculator);
 
-        assertThrows(DistanceUseCaseException.class,
+        assertThrows(IllegalArgumentException.class,
                 () -> distanceUseCase.getDirectlyDistance(Station.of("A"), Station.of("B"), Station.of("A")),
                 "Cannot contain a loop in the road of stations.");
     }
@@ -65,7 +65,7 @@ class DistanceUseCaseTest {
         RailroadCalculator railroadCalculator = RailroadCalculatorBuilder.of(new GraphBuilder<>()).build();
         DistanceUseCase distanceUseCase = new DistanceUseCase(railroadCalculator);
 
-        assertThrows(DistanceUseCaseException.class,
+        assertThrows(IllegalArgumentException.class,
                 () -> distanceUseCase.getDirectlyDistance(Station.of("A")),
                 "We need at least two stations to calculate distance.");
     }

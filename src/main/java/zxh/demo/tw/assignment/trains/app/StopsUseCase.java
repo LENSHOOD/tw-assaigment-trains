@@ -14,14 +14,14 @@ public class StopsUseCase {
         this.calculator = calculator;
     }
 
-    List<Road> getAllRoadsExactlyStopsFrom(Station start, Station end, int stops) {
+    public List<Road> getAllRoadsExactlyStopsFrom(Station start, Station end, int stops) {
         return getAllRoadsWithinStopsFrom(start, end, stops)
                 .stream()
                 .filter(r -> r.getAllStops().size() == stops + 1)
                 .collect(Collectors.toList());
     }
 
-    List<Road> getAllRoadsWithinStopsFrom(Station start, Station end, int stops) {
+    public List<Road> getAllRoadsWithinStopsFrom(Station start, Station end, int stops) {
         List<Road> possibleRoadsWithinStops = calculator.getPossibleRoads(start, end)
                 .stream()
                 .filter(r -> r.getAllStops().size() <= stops + 1)

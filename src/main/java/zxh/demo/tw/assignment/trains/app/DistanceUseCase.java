@@ -2,7 +2,6 @@ package zxh.demo.tw.assignment.trains.app;
 
 import static zxh.demo.tw.assignment.trains.domain.util.NullChecker.requireNonNull;
 
-import zxh.demo.tw.assignment.trains.app.exception.DistanceUseCaseException;
 import zxh.demo.tw.assignment.trains.domain.entity.RailroadCalculator;
 import zxh.demo.tw.assignment.trains.domain.entity.Road;
 import zxh.demo.tw.assignment.trains.domain.vo.Distance;
@@ -21,11 +20,11 @@ public class DistanceUseCase {
 
     public Optional<Distance> getDirectlyDistance(Station... routeOfStations) {
         if (routeOfStations.length < 2) {
-            throw new DistanceUseCaseException("We need at least two stations to calculate distance.");
+            throw new IllegalArgumentException("We need at least two stations to calculate distance.");
         }
 
         if (Stream.of(routeOfStations).distinct().count() != routeOfStations.length) {
-            throw new DistanceUseCaseException("Cannot contain a loop in the road of stations.");
+            throw new IllegalArgumentException("Cannot contain a loop in the road of stations.");
         }
 
         List<Road> possibleRoads = calculator.getPossibleRoads(

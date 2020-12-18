@@ -1,5 +1,7 @@
 package zxh.demo.tw.assignment.trains.domain.vo;
 
+import static java.util.Objects.*;
+
 import java.util.Objects;
 
 public class Station {
@@ -10,6 +12,10 @@ public class Station {
     }
 
     public static Station of(String name) {
+        if (isNull(name) || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Station name cannot be empty.");
+        }
+
         return new Station(name);
     }
 
@@ -27,6 +33,6 @@ public class Station {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return hash(name);
     }
 }
